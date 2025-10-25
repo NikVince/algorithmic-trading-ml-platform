@@ -5,8 +5,8 @@
 [![MLflow](https://img.shields.io/badge/MLflow-2.8+-orange.svg)](https://mlflow.org)
 [![Docker](https://img.shields.io/badge/Docker-20.10+-blue.svg)](https://docker.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/your-username/algorithmic-trading-ml-platform)
-[![Coverage](https://img.shields.io/badge/Coverage-90%25-brightgreen.svg)](https://github.com/your-username/algorithmic-trading-ml-platform)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/NikVince/algorithmic-trading-ml-platform)
+[![Coverage](https://img.shields.io/badge/Coverage-90%25-brightgreen.svg)](https://github.com/NikVince/algorithmic-trading-ml-platform)
 
 > **A production-grade algorithmic trading system showcasing ML Engineering and MLOps skills for portfolio/internship applications.**
 
@@ -87,7 +87,7 @@ graph TB
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/algorithmic-trading-ml-platform.git
+   git clone https://github.com/NikVince/algorithmic-trading-ml-platform.git
    cd algorithmic-trading-ml-platform
    ```
 
@@ -118,7 +118,7 @@ graph TB
 
 ### 🎯 Project Status
 **Current Phase**: Phase 1 - Data Pipeline Foundation  
-**Overall Progress**: 15% Complete  
+**Overall Progress**: 0% Complete  
 **Last Updated**: October 2025
 
 ### 📋 Development Tracking
@@ -131,12 +131,12 @@ graph TB
 | **Documentation** | ✅ Complete | 100% | Oct 2025 |
 | **Architecture Design** | ✅ Complete | 100% | Oct 2025 |
 
-#### 🔄 In Progress Components
+#### ⏳ Pending Components
 
 | Component | Status | Progress | Last Updated |
 |-----------|--------|----------|--------------|
-| **Data Pipeline** | 🔄 In Progress | 25% | Oct 2025 |
-| **Development Environment** | 🔄 In Progress | 50% | Oct 2025 |
+| **Data Pipeline** | ⏳ Pending | 0% | - |
+| **Development Environment** | ⏳ Pending | 0% | - |
 
 #### ⏳ Pending Components
 
@@ -212,7 +212,7 @@ graph TB
 
 | Milestone | Target Date | Status | Progress |
 |-----------|-------------|--------|----------|
-| **Phase 1 Complete** | Nov 8, 2025 | 🔄 In Progress | 25% |
+| **Phase 1 Complete** | Nov 8, 2025 | ⏳ Pending | 0% |
 | **Phase 2 Complete** | Nov 22, 2025 | ⏳ Pending | 0% |
 | **Phase 3 Complete** | Dec 13, 2025 | ⏳ Pending | 0% |
 | **Phase 4 Complete** | Dec 27, 2025 | ⏳ Pending | 0% |
@@ -323,8 +323,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - **Documentation**: Check the [docs](docs/) directory
-- **Issues**: Report bugs via [GitHub Issues](https://github.com/your-username/algorithmic-trading-ml-platform/issues)
-- **Discussions**: Join discussions via [GitHub Discussions](https://github.com/your-username/algorithmic-trading-ml-platform/discussions)
+- **Issues**: Report bugs via [GitHub Issues](https://github.com/NikVince/algorithmic-trading-ml-platform/issues)
+- **Discussions**: Join discussions via [GitHub Discussions](https://github.com/NikVince/algorithmic-trading-ml-platform/discussions)
 
 ---
 
