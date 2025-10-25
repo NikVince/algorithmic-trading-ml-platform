@@ -1,0 +1,590 @@
+# Algorithmic Trading ML Platform - Cursor AI Rules
+
+## Project Overview
+This is an end-to-end algorithmic trading system showcasing ML Engineering and MLOps skills for portfolio/internship applications. Focus areas: feature engineering, model training pipelines, inference serving, and production-grade architecture.
+
+## Tech Stack
+- **Language**: Python 3.11+
+- **ML/DS**: pandas, numpy, scikit-learn, lightgbm, tensorflow
+- **MLOps**: MLflow, Optuna
+- **Data**: ccxt (crypto APIs), TimescaleDB (PostgreSQL)
+- **Backtesting**: vectorbt
+- **API**: FastAPI
+- **Dashboard**: Streamlit
+- **Monitoring**: Prometheus, Grafana
+- **Infrastructure**: Docker, Docker Compose
+
+## Architecture Principles
+1. **Modularity**: Each component (data, features, models, strategies) is independent
+2. **Testability**: All business logic has unit tests
+3. **Observability**: All services emit metrics and logs
+4. **Reproducibility**: All experiments are tracked in MLflow
+5. **Time-series awareness**: Never use future data in past decisions
+
+## Code Organization
+
+### Directory Structure
+```
+src/
+├── features/      # Feature engineering (CUSTOM - showcase ML skills)
+├── models/        # Model training (CUSTOM - showcase MLOps)
+├── inference/     # Model serving (CUSTOM - showcase deployment)
+├── strategies/    # Trading strategies (CUSTOM - showcase domain knowledge)
+├── backtesting/   # Backtest engine (uses vectorbt, custom metrics)
+├── data/          # Data pipeline (uses ccxt, custom validation)
+└── utils/         # Shared utilities
+```
+
+### Naming Conventions
+- **Files**: snake_case (e.g., `feature_engineering.py`)
+- **Classes**: PascalCase (e.g., `FeatureEngineer`)
+- **Functions**: snake_case (e.g., `compute_returns`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `MAX_LOOKBACK_PERIOD`)
+- **Private methods**: _leading_underscore (e.g., `_validate_data`)
+
+## Coding Standards
+
+### Type Hints (Required)
+```python
+def compute_returns(prices: pd.Series, window: int) -> pd.Series:
+    """Always use type hints for function signatures"""
+    return (prices - prices.shift(window)) / prices.shift(window)
+```
+
+### Docstrings (Required for all public functions/classes)
+```python
+def create_features(self, data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Create technical and market features for ML models.
+    
+    Args:
+        data: OHLCV dataframe with columns [open, high, low, close, volume]
+        
+    Returns:
+        DataFrame with engineered features
+        
+    Raises:
+        ValueError: If data is missing required columns
+        
+    Example:
+        >>> engineer = FeatureEngineer()
+        >>> features = engineer.create_features(ohlcv_data)
+    """
+```
+
+### Logging (Use loguru)
+```python
+from loguru import logger
+
+# Use appropriate log levels
+logger.info("Starting data ingestion for BTC/USDT")
+logger.warning("Missing data points detected: {count}", count=missing)
+logger.error("API request failed: {error}", error=str(e))
+```
+
+### Error Handling
+```python
+# Be specific with exceptions
+try:
+    data = fetch_from_api()
+except ccxt.NetworkError as e:
+    logger.error(f"Network error: {e}")
+    retry_with_backoff()
+except ccxt.ExchangeError as e:
+    logger.error(f"Exchange error: {e}")
+    alert_admin()
+```
+
+### Configuration Management
+```python
+# Use pydantic for config validation
+from pydantic import BaseModel
+
+class FeatureConfig(BaseModel):
+    lookback_periods: list[int] = [5, 10, 20, 50]
+    technical_indicators: list[str] = ["RSI", "MACD", "BB"]
+    
+# Load from YAML
+config = FeatureConfig(**yaml.safe_load(open("configs/features.yaml")))
+```
+
+## ML/MLOps Best Practices
+
+### Time-Series Data Handling
+```python
+# ❌ NEVER do this (look-ahead bias)
+def bad_feature(data):
+    return data['close'].shift(-1)  # Uses future data!
+
+# ✅ Always use only past data
+def good_feature(data):
+    return data['close'].shift(1)  # Uses past data only
+```
+
+### Train/Val/Test Splits
+```python
+# Time-based splits only (no random shuffle)
+train = data['2020':'2022']
+val = data['2023-01':'2023-06']
+test = data['2023-07':]  # Held out until final evaluation
+```
+
+### Experiment Tracking
+```python
+import mlflow
+
+# Track ALL experiments
+with mlflow.start_run(run_name="lstm_v1"):
+    mlflow.log_params({
+        "model": "LSTM",
+        "hidden_size": 128,
+        "lookback": 50
+    })
+    
+    # Train model
+    model.fit(X_train, y_train)
+    
+    # Log metrics
+    mlflow.log_metrics({
+        "val_sharpe": sharpe_ratio,
+        "val_max_dd": max_drawdown
+    })
+    
+    # Save model
+    mlflow.sklearn.log_model(model, "model")
+```
+
+### Feature Engineering Documentation
+```python
+# Always explain WHY a feature exists
+class FeatureEngineer:
+    def compute_momentum(self, data: pd.DataFrame, window: int) -> pd.Series:
+        """
+        Compute price momentum over specified window.
+        
+        Rationale: Captures trend-following behavior. Positive momentum
+        suggests continuation, negative suggests reversal. Based on 
+        Jegadeesh & Titman (1993) momentum research.
+        
+        Formula: (price_t - price_{t-window}) / price_{t-window}
+        """
+        returns = (data['close'] - data['close'].shift(window)) / data['close'].shift(window)
+        return returns
+```
+
+## Testing Requirements
+
+### Unit Tests (pytest)
+```python
+# tests/test_features.py
+import pytest
+from src.features.engineering import FeatureEngineer
+
+def test_compute_returns():
+    """Test returns calculation with known values"""
+    data = pd.DataFrame({
+        'close': [100, 110, 105, 115]
+    })
+    
+    engineer = FeatureEngineer()
+    returns = engineer.compute_returns(data, window=1)
+    
+    assert returns.iloc[1] == pytest.approx(0.10, rel=1e-5)  # 10% return
+    assert returns.iloc[2] == pytest.approx(-0.0454, rel=1e-3)  # -4.54% return
+```
+
+### Integration Tests
+```python
+def test_end_to_end_pipeline():
+    """Test complete pipeline from data -> features -> prediction"""
+    # Fetch data
+    data = fetch_test_data()
+    
+    # Engineer features
+    features = engineer.create_features(data)
+    
+    # Load model
+    model = mlflow.pyfunc.load_model("models:/test_model/1")
+    
+    # Generate prediction
+    prediction = model.predict(features)
+    
+    assert prediction is not None
+    assert len(prediction) == len(features)
+```
+
+## Database Interactions
+
+### TimescaleDB Queries
+```python
+# Use parameterized queries (prevent SQL injection)
+query = """
+    SELECT time, close, volume
+    FROM ohlcv
+    WHERE symbol = %s
+        AND time >= %s
+        AND time <= %s
+    ORDER BY time ASC
+"""
+
+cursor.execute(query, (symbol, start_date, end_date))
+```
+
+### Connection Management
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def get_db_connection():
+    """Context manager for database connections"""
+    conn = psycopg2.connect(DATABASE_URL)
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+        
+# Usage
+with get_db_connection() as conn:
+    cursor = conn.cursor()
+    cursor.execute(query)
+```
+
+## API Development (FastAPI)
+
+### Endpoint Design
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI(title="Trading ML API")
+
+class PredictionRequest(BaseModel):
+    symbol: str
+    timestamp: datetime
+
+class PredictionResponse(BaseModel):
+    symbol: str
+    prediction: float
+    confidence: float
+    timestamp: datetime
+
+@app.post("/predict", response_model=PredictionResponse)
+async def predict(request: PredictionRequest):
+    """Generate trading signal prediction"""
+    try:
+        features = feature_service.get_latest_features(request.symbol)
+        prediction = model_service.predict(features)
+        
+        return PredictionResponse(
+            symbol=request.symbol,
+            prediction=prediction,
+            confidence=compute_confidence(features),
+            timestamp=datetime.now()
+        )
+    except Exception as e:
+        logger.error(f"Prediction failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+```
+
+## Monitoring & Observability
+
+### Prometheus Metrics
+```python
+from prometheus_client import Counter, Histogram, Gauge
+
+# Define metrics at module level
+predictions_total = Counter('predictions_total', 'Total predictions made')
+prediction_latency = Histogram('prediction_latency_seconds', 'Prediction latency')
+active_strategies = Gauge('active_strategies', 'Number of active strategies')
+
+# Use in code
+@prediction_latency.time()
+def predict(features):
+    predictions_total.inc()
+    return model.predict(features)
+```
+
+## Documentation Requirements
+
+### README Sections
+1. Project Overview (what + why)
+2. Architecture Diagram
+3. Tech Stack
+4. Quick Start (Docker Compose)
+5. Project Structure
+6. Key Components (custom vs imported)
+7. ML Methodology
+8. Results & Metrics
+9. Development Guide
+10. Future Improvements
+
+### Jupyter Notebooks
+- Use markdown cells to explain reasoning
+- Include visualizations for all analyses
+- Document failed experiments (learning moments)
+- Export key findings to docs/
+
+## Git Practices
+
+### Commit Messages
+```
+feat: Add LSTM model training pipeline
+fix: Correct look-ahead bias in feature engineering
+docs: Update architecture diagram with inference service
+test: Add unit tests for returns calculation
+refactor: Extract feature validation to separate module
+```
+
+### Branch Strategy
+- `main`: Production-ready code
+- `develop`: Integration branch
+- `feature/feature-name`: New features
+- `fix/bug-name`: Bug fixes
+
+## Security & Secrets
+
+### Environment Variables
+```python
+# Use python-dotenv
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+API_KEY = os.getenv("BINANCE_API_KEY")
+API_SECRET = os.getenv("BINANCE_API_SECRET")
+
+# Never commit secrets
+# Add to .gitignore: .env
+```
+
+## Performance Considerations
+
+### Vectorization (Use NumPy/Pandas)
+```python
+# ❌ Slow: Iterative
+for i in range(len(data)):
+    returns[i] = (data['close'][i] - data['close'][i-1]) / data['close'][i-1]
+
+# ✅ Fast: Vectorized
+returns = data['close'].pct_change()
+```
+
+### Caching
+```python
+from functools import lru_cache
+
+@lru_cache(maxsize=100)
+def compute_expensive_feature(symbol: str, window: int) -> np.ndarray:
+    """Cache expensive computations"""
+    pass
+```
+
+## Common Pitfalls to Avoid
+
+1. **Look-ahead bias**: Using future data in past decisions
+2. **Data leakage**: Training on test data
+3. **Survivorship bias**: Only using currently traded assets
+4. **Overfitting**: Too many features, too little data
+5. **Ignoring transaction costs**: Unrealistic backtest returns
+6. **Not handling missing data**: Gaps in time-series
+7. **Hardcoded paths**: Use Path objects and config files
+
+## When Implementing New Features
+
+1. **First**: Write docstring explaining WHY this feature exists
+2. **Then**: Implement with type hints
+3. **Next**: Add unit tests
+4. **Finally**: Document in notebooks/ if complex
+
+## Response Format Preferences
+
+- Keep explanations concise but complete
+- Provide working code examples
+- Include error handling
+- Add type hints
+- Document edge cases
+- Suggest tests when writing new functions
+
+## Documentation Maintenance Rules
+
+### Automatic Documentation Updates
+When making changes to the codebase, ALWAYS update relevant documentation files:
+
+#### Code-to-Documentation Mapping
+- **`src/data/`** → Update `docs/components/data_pipeline.md`
+- **`src/features/`** → Update `docs/components/feature_engineering.md`
+- **`src/models/`** → Update `docs/components/model_training.md`
+- **`src/inference/`** → Update `docs/components/model_serving.md`
+- **`src/strategies/`** → Update `docs/components/trading_strategies.md`
+- **`src/backtesting/`** → Update `docs/components/backtesting.md`
+- **API endpoints** → Update `docs/api_reference.md`
+- **Architecture changes** → Update `docs/architecture.md`
+- **Deployment changes** → Update `docs/deployment.md`
+- **Performance optimizations** → Update `docs/performance.md`
+
+#### Documentation Update Triggers
+When you modify any file, check if documentation needs updating:
+
+1. **New Python modules/classes** → Update component docs with:
+   - Class/function descriptions
+   - Usage examples
+   - Configuration options
+   - Dependencies
+
+2. **API endpoint changes** → Update `docs/api_reference.md` with:
+   - Endpoint descriptions
+   - Request/response schemas
+   - Error codes
+   - Authentication requirements
+
+3. **Configuration changes** → Update relevant docs with:
+   - New environment variables
+   - Configuration file changes
+   - Default values
+   - Validation rules
+
+4. **Architecture changes** → Update `docs/architecture.md` with:
+   - New components
+   - Data flow changes
+   - Service interactions
+   - Infrastructure updates
+
+#### Documentation Standards
+- **Always include code examples** in component documentation
+- **Update API reference** when adding/modifying endpoints
+- **Include error handling** documentation
+- **Document configuration options** with examples
+- **Add troubleshooting sections** for complex components
+- **Include performance considerations** where relevant
+
+#### Documentation File Templates
+When creating new documentation files, use these templates:
+
+**Component Documentation** (`docs/components/[component].md`):
+```markdown
+# [Component Name]
+
+## Overview
+Brief description of the component's purpose and functionality.
+
+## Architecture
+- Key classes and functions
+- Data flow
+- Dependencies
+
+## Configuration
+- Environment variables
+- Configuration files
+- Default values
+
+## Usage Examples
+```python
+# Code examples here
+```
+
+## API Reference
+- Public methods
+- Parameters
+- Return values
+
+## Troubleshooting
+- Common issues
+- Error messages
+- Solutions
+```
+
+**API Documentation** (`docs/api_reference.md`):
+```markdown
+## [Endpoint Name]
+
+**Method**: `GET/POST/PUT/DELETE`  
+**Path**: `/api/endpoint`  
+**Description**: Brief description
+
+### Request
+```json
+{
+  "parameter": "value"
+}
+```
+
+### Response
+```json
+{
+  "result": "value"
+}
+```
+
+### Error Codes
+- `400`: Bad Request
+- `500`: Internal Server Error
+```
+
+### Documentation Maintenance Checklist
+Before completing any code changes, verify:
+
+- [ ] Component documentation updated (if applicable)
+- [ ] API reference updated (if applicable)
+- [ ] Architecture diagram updated (if applicable)
+- [ ] Configuration documentation updated (if applicable)
+- [ ] Troubleshooting section updated (if applicable)
+- [ ] Code examples are current and working
+- [ ] All links and references are valid
+
+## Special Instructions for Cursor
+
+- When suggesting ML models, always include proper cross-validation
+- When suggesting features, explain the financial intuition
+- When suggesting APIs, include error handling and rate limiting
+- Prioritize readability over cleverness
+- Suggest logging at appropriate points
+- Consider time-series nature of data in all operations
+- **ALWAYS update documentation when making code changes**
+- **Create documentation files if they don't exist**
+- **Include working code examples in all documentation**
+- **ALWAYS validate current date/time via CLI before updating any document dates**
+- **NEVER hallucinate or invent dates - always use accurate current timestamp**
+
+## Progress Tracking Rules
+
+### Development Progress Tracking
+When making any code changes or implementing features, ALWAYS update the relevant progress tracking documents:
+
+#### Progress Document Locations
+- **Main Progress Tracker**: `docs/components/progress/development_progress_tracker.md`
+- **Data Pipeline Progress**: `docs/components/progress/data_pipeline_progress/data_pipeline_checklist.md`
+- **Feature Engineering Progress**: `docs/components/progress/feature_engineering_progress/feature_engineering_checklist.md`
+- **Model Training Progress**: `docs/components/progress/model_training_progress/model_training_checklist.md`
+- **Model Serving Progress**: `docs/components/progress/model_serving_progress/model_serving_checklist.md`
+- **Trading Strategies Progress**: `docs/components/progress/trading_strategies_progress/trading_strategies_checklist.md`
+- **Backtesting Progress**: `docs/components/progress/backtesting_progress/backtesting_checklist.md`
+- **Monitoring Progress**: `docs/components/progress/monitoring_progress/monitoring_checklist.md`
+- **Integration Progress**: `docs/components/progress/integration_progress/integration_checklist.md`
+
+#### Progress Update Requirements
+- **Update Status**: Change task status from pending → in_progress → completed
+- **Update Dates**: Use accurate current timestamp from CLI
+- **Update Progress**: Recalculate percentage
+- **Update Notes**: Add relevant implementation notes or blockers
+- **Cross-Reference**: Update main progress tracker with component progress
+
+#### Progress Update Triggers
+Update progress documents when:
+- Starting work on any component
+- Completing any task or milestone
+- Encountering blockers or issues
+- Making architectural decisions
+- Completing testing or documentation
+- Reaching phase milestones
+
+#### Progress Tracking Standards
+- **Accurate Status**: Always reflect current actual progress
+- **Timely Updates**: Update progress immediately when status changes
+- **Detailed Notes**: Include implementation details and decisions
+- **Cross-Validation**: Ensure consistency across all progress documents
+- **Regular Reviews**: Weekly comprehensive progress assessment
