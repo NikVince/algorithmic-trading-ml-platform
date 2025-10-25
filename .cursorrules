@@ -557,14 +557,14 @@ When making any code changes or implementing features, ALWAYS update the relevan
 
 #### Progress Document Locations
 - **Main Progress Tracker**: `docs/components/progress/development_progress_tracker.md`
-- **Data Pipeline Progress**: `docs/components/progress/data_pipeline_progress/data_pipeline_checklist.md`
-- **Feature Engineering Progress**: `docs/components/progress/feature_engineering_progress/feature_engineering_checklist.md`
-- **Model Training Progress**: `docs/components/progress/model_training_progress/model_training_checklist.md`
-- **Model Serving Progress**: `docs/components/progress/model_serving_progress/model_serving_checklist.md`
-- **Trading Strategies Progress**: `docs/components/progress/trading_strategies_progress/trading_strategies_checklist.md`
-- **Backtesting Progress**: `docs/components/progress/backtesting_progress/backtesting_checklist.md`
-- **Monitoring Progress**: `docs/components/progress/monitoring_progress/monitoring_checklist.md`
-- **Integration Progress**: `docs/components/progress/integration_progress/integration_checklist.md`
+- **Data Pipeline Progress**: `docs/components/data_pipeline/progress/data_pipeline_checklist.md`
+- **Feature Engineering Progress**: `docs/components/feature_engineering/progress/feature_engineering_checklist.md`
+- **Model Training Progress**: `docs/components/model_training/progress/model_training_checklist.md`
+- **Model Serving Progress**: `docs/components/model_serving/progress/model_serving_checklist.md`
+- **Trading Strategies Progress**: `docs/components/trading_strategies/progress/trading_strategies_checklist.md`
+- **Backtesting Progress**: `docs/components/backtesting/progress/backtesting_checklist.md`
+- **Monitoring Progress**: `docs/components/monitoring/progress/monitoring_checklist.md`
+- **Integration Progress**: `docs/components/integration/progress/integration_checklist.md`
 
 #### Progress Update Requirements
 - **Update Status**: Change task status from pending → in_progress → completed

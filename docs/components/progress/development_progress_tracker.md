@@ -36,7 +36,8 @@ This document serves as the central hub for tracking development progress across
 ### **Data Pipeline Progress**
 - **Status**: 🔄 In Progress (0% Complete)
 - **Timeline**: Oct 25 - Nov 8, 2025
-- **Detailed Progress**: [Data Pipeline Progress](data_pipeline_progress/)
+- **Documentation**: [Data Pipeline Docs](../data_pipeline/data_pipeline.md)
+- **Detailed Progress**: [Data Pipeline Progress](../data_pipeline/progress/data_pipeline_checklist.md)
 - **Key Deliverables**:
   - [ ] Docker Compose setup with TimescaleDB + Redis
   - [ ] Multi-exchange data collector
@@ -47,7 +48,8 @@ This document serves as the central hub for tracking development progress across
 ### **Feature Engineering Progress**
 - **Status**: ⏳ Pending (0% Complete)
 - **Timeline**: Nov 8 - Nov 22, 2025
-- **Detailed Progress**: [Feature Engineering Progress](feature_engineering_progress/)
+- **Documentation**: [Feature Engineering Docs](../feature_engineering/feature_engineering.md)
+- **Detailed Progress**: [Feature Engineering Progress](../feature_engineering/progress/feature_engineering_checklist.md)
 - **Key Deliverables**:
   - [ ] Technical indicators library
   - [ ] Market regime detection
@@ -57,7 +59,8 @@ This document serves as the central hub for tracking development progress across
 ### **Model Training Progress**
 - **Status**: ⏳ Pending (0% Complete)
 - **Timeline**: Nov 22 - Dec 13, 2025
-- **Detailed Progress**: [Model Training Progress](model_training_progress/)
+- **Documentation**: [Model Training Docs](../model_training/model_training.md)
+- **Detailed Progress**: [Model Training Progress](../model_training/progress/model_training_checklist.md)
 - **Key Deliverables**:
   - [ ] MLflow experiment tracking
   - [ ] Walk-forward validation
@@ -67,7 +70,8 @@ This document serves as the central hub for tracking development progress across
 ### **Model Serving Progress**
 - **Status**: ⏳ Pending (0% Complete)
 - **Timeline**: Dec 13 - Dec 27, 2025
-- **Detailed Progress**: [Model Serving Progress](model_serving_progress/)
+- **Documentation**: [Model Serving Docs](../model_serving/model_serving.md)
+- **Detailed Progress**: [Model Serving Progress](../model_serving/progress/model_serving_checklist.md)
 - **Key Deliverables**:
   - [ ] FastAPI inference service
   - [ ] Model loading and caching
@@ -77,7 +81,8 @@ This document serves as the central hub for tracking development progress across
 ### **Trading Strategies Progress**
 - **Status**: ⏳ Pending (0% Complete)
 - **Timeline**: Dec 27, 2025 - Jan 10, 2026
-- **Detailed Progress**: [Trading Strategies Progress](trading_strategies_progress/)
+- **Documentation**: [Trading Strategies Docs](../trading_strategies/trading_strategies.md)
+- **Detailed Progress**: [Trading Strategies Progress](../trading_strategies/progress/trading_strategies_checklist.md)
 - **Key Deliverables**:
   - [ ] Strategy framework
   - [ ] Momentum strategies
@@ -87,7 +92,8 @@ This document serves as the central hub for tracking development progress across
 ### **Backtesting Engine Progress**
 - **Status**: ⏳ Pending (0% Complete)
 - **Timeline**: Jan 10 - Jan 24, 2026
-- **Detailed Progress**: [Backtesting Progress](backtesting_progress/)
+- **Documentation**: [Backtesting Docs](../backtesting/backtesting.md)
+- **Detailed Progress**: [Backtesting Progress](../backtesting/progress/backtesting_checklist.md)
 - **Key Deliverables**:
   - [ ] vectorbt integration
   - [ ] Transaction cost modeling
@@ -97,7 +103,8 @@ This document serves as the central hub for tracking development progress across
 ### **Monitoring & Dashboard Progress**
 - **Status**: ⏳ Pending (0% Complete)
 - **Timeline**: Jan 24 - Feb 7, 2026
-- **Detailed Progress**: [Monitoring Progress](monitoring_progress/)
+- **Documentation**: [Monitoring Docs](../monitoring/monitoring.md)
+- **Detailed Progress**: [Monitoring Progress](../monitoring/progress/monitoring_checklist.md)
 - **Key Deliverables**:
   - [ ] Prometheus metrics
   - [ ] Grafana dashboards
@@ -107,7 +114,8 @@ This document serves as the central hub for tracking development progress across
 ### **Integration & Testing Progress**
 - **Status**: ⏳ Pending (0% Complete)
 - **Timeline**: Feb 7 - Feb 21, 2026
-- **Detailed Progress**: [Integration Progress](integration_progress/)
+- **Documentation**: [Integration Docs](../integration/integration.md) *(To be created)*
+- **Detailed Progress**: [Integration Progress](../integration/progress/integration_checklist.md)
 - **Key Deliverables**:
   - [ ] Docker Compose orchestration
   - [ ] Integration tests
