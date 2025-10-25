@@ -544,6 +544,50 @@ Before completing any code changes, verify:
 - Prioritize readability over cleverness
 - Suggest logging at appropriate points
 - Consider time-series nature of data in all operations
+
+## Architectural Decision Documentation
+
+### Required Documentation Updates
+When making any architectural decisions during development, ALWAYS update the relevant architecture documentation:
+
+#### Architecture Documentation Locations
+- **Data Pipeline**: `docs/components/data_pipeline/architecture/`
+- **Feature Engineering**: `docs/components/feature_engineering/architecture/`
+- **Model Training**: `docs/components/model_training/architecture/`
+- **Model Serving**: `docs/components/model_serving/architecture/`
+- **Trading Strategies**: `docs/components/trading_strategies/architecture/`
+- **Backtesting**: `docs/components/backtesting/architecture/`
+- **Monitoring**: `docs/components/monitoring/architecture/`
+
+#### Documentation Update Triggers
+Update architecture documentation when:
+- Making technology choices (databases, frameworks, libraries)
+- Defining system boundaries and interfaces
+- Making performance or scalability decisions
+- Choosing deployment strategies
+- Defining data flow and component interactions
+- Making security or compliance decisions
+
+#### Documentation Standards
+- **Always include**: Decision rationale, alternatives considered, trade-offs
+- **Include**: Implementation details, configuration, and code examples
+- **Document**: Performance implications, security considerations, maintenance requirements
+- **Update**: Timestamps, version numbers, and decision makers
+- **Cross-reference**: Related components and dependencies
+
+#### Example Architecture Decision Format
+```markdown
+## Architecture Decision: [Decision Title]
+**Date**: [YYYY-MM-DD]
+**Decision**: [What was decided]
+**Rationale**: [Why this decision was made]
+**Alternatives Considered**: [What other options were evaluated]
+**Trade-offs**: [Pros and cons of the decision]
+**Implementation**: [How to implement the decision]
+**Performance Impact**: [Expected performance implications]
+**Security Considerations**: [Security implications]
+**Maintenance**: [Ongoing maintenance requirements]
+```
 - **ALWAYS update documentation when making code changes**
 - **Create documentation files if they don't exist**
 - **Include working code examples in all documentation**
